@@ -541,10 +541,24 @@ La corde réelle est régie par l'équation aux dérivées partielles (EDP) suiv
 
 %--- Question 5 ---%
 
-  \question Ecrire l'équation caractéristique de l'EDP (\ref{eq:model_stiff}) en y injectant $\tilde u(x,t)=e^{st+j\beta x}$, et montrer que pour $\sigma_0\geqslant 0$ et $\sigma_1\geqslant 0$ petits, ses racines sont données par $s_{\pm}=\sigma\pm j\omega$ où 
+  \question On injecte $\tilde u(x,t)=e^{st+j\beta x}$ dans l'EDP (\ref{eq:model_stiff}) :
+
+  \[
+s^2 = -\gamma^2 \beta^2 - \kappa^2 \beta^4 - 2 \sigma_0 s - 2 \sigma_1 \beta^2 s\\
+  \]
+  Soit :
+  \[
+s^2 + 2(\sigma_0 + \sigma_1 \beta^2) s + \gamma^2 \beta^2 + \kappa^2 \beta^4 = 0
+  \]~\\
+  C'est une équation complexe du second degré, on calcule alors le discriminant réduit :
+  \[
+\Delta' = (\sigma_0 + \sigma_1 \beta^2)^2 - \gamma^2 \beta^2 + \kappa^2 \beta^4
+  \]~\\
+  Et pour $\sigma_0\geqslant 0$ et $\sigma_1\geqslant 0$ petits, $\Delta' < 0$ donc les racines de l'équation caractéristique de l'EDP (\ref{eq:model_stiff}) sont données par $s_{\pm}=\sigma\pm j\omega$ où 
   \[
     \sigma(\beta)=-\sigma_0-\sigma_1\beta^2,\quad \omega(\beta)=\sqrt{\gamma^2 \beta^2+\kappa^2\beta^4-(\sigma_0+\sigma_1\beta^2)^2}
-  \]
+  \]~\\
+
   Ainsi la perte $\sigma(\beta)$ décroît avec le nombre d'onde $\beta$, et vaut $-\sigma_0$ quand la raideur n'est pas prise en compte.  Montrer que $\sigma$ dépend de la fréquence $\omega$ où 
   \[
     \sigma(\omega)=-\sigma_0-\sigma_1\xi (\omega),\quad \xi(\omega)=\frac{-\gamma^2+\sqrt{\gamma^4+4\kappa^2 \omega^2}}{2\kappa^2}
