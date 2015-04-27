@@ -504,13 +504,27 @@ La corde réelle est régie par l'équation aux dérivées partielles (EDP) suiv
   
   De même pour C :  \begin{equation}\C=(1-\sigma_0 k)\mathbf{I}+\sigma_1 k \D_{xx}\end{equation}
 
-  Quand à B, on calcule dans un premier temps l'expression de la matrice $\D_{xxxx}$
+  Quand à B, étant donné que
+  \[
+    b_1=\frac{\kappa^2 k^2}{h^4}, \quad b_2=-\frac{\gamma^2 k^2}{h^2}-\frac{4\kappa^2 k^2}{h^4},
+    \quad b_3=-2+\frac{2\gamma^2 k^2}{h^2}+\frac{6\kappa^2 k^2}{h^4}
+  \]
+  On a :
+  $$\B=-2\mathbf{I}-\gamma^2 k^2 \D_{xx} + \frac{\kappa^2 k^2}{h^4}
+    \begin{bmatrix}
+      5 & -4 & -1 & 0 & \cdots & 0  \\ 
+      -4 & 6 & -4 & 1 & \ddots & \vdots \\  
+      1 & -4 & 6 & -4 & \ddots & 0 \\ 
+      0 & \ddots & \ddots & \ddots & \ddots &1\\ 
+      \vdots & \ddots & 1 & -4 & 6 & -4  \\ 
+      0 & \cdots &  0 & 1 & -4 & 5  \\
+    \end{bmatrix}
+    $$
 
-  Blabla
+    Et il se trouve que cette matrice est exactement la matrice $D_{xxxx}$, en prenant en compte le facteur $\frac{1}{h^4}$.\\
 
-  ~\\\\
   On obtient alors :
- $$ \B=-2\mathbf{I}-\gamma^2 k^2 \D_{xx}+\kappa^2 k^2\D_{xxxx}, \quad $$
+  $$ \B=-2\mathbf{I}-\gamma^2 k^2 \D_{xx}+\kappa^2 k^2\D_{xxxx}, \quad $$
 
 %--- Fin Question 4 ---%
 
