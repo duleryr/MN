@@ -342,8 +342,8 @@ La corde réelle est régie par l'équation aux dérivées partielles (EDP) suiv
   Nous avons alors approché chaque terme de l'EDP (\ref{eq:model_stiff}) par des combinaisons linéaires de points de la grille de discrétisation, et en injectant les résultats obtenus, on obtient :
   \begin{align}
     &~~a_1u_{l-1}^{n+1}+a_2u_l^{n+1}+a_1u_{l+1}^{n+1}\\
-    +& ~~b_1u_{l-2}^n+b_2u_{l-1}^n+b_3u_l^n+b_2u_{l+1}^n+b_1u_{l+2}^n\\ 
-    +&~~ c_1u_{l-1}^{n-1}+c_2u_l^{n-1}+c_1u_{l+1}^{n-1}\\ 
+    +&~~b_1u_{l-2}^n+b_2u_{l-1}^n+b_3u_l^n+b_2u_{l+1}^n+b_1u_{l+2}^n\\ 
+    +&~~c_1u_{l-1}^{n-1}+c_2u_l^{n-1}+c_1u_{l+1}^{n-1}\\ 
     =&~0
   \end{align}
 
@@ -476,7 +476,41 @@ La corde réelle est régie par l'équation aux dérivées partielles (EDP) suiv
 
 %--- Question 4 ---%
 
-  \question Montrer que $$\A=(1+\sigma_0 k)\mathbf{I}-\sigma_1 k \D_{xx}, \quad \B=-2\mathbf{I}-\gamma^2 k^2 \D_{xx}+\kappa^2 k^2\D_{xxxx}, \quad \C=(1-\sigma_0 k)\mathbf{I}+\sigma_1 k \D_{xx}$$
+  \question Etant donné que 
+  \[
+    a_1=-\frac{\sigma_1 k}{h^2},\quad a_2=1+\sigma_0 k+\frac{2\sigma_1 k}{h^2}
+  \]
+  On a,
+  \[
+    \A=
+    \begin{bmatrix} 
+      a_2 & a_1 & 0 & \cdots & 0 \\ 
+      a_1 & a_2 & a_1 & \ddots & \vdots \\ 
+      0 & a_1 & a_2 & \ddots  & 0 \\ 
+      \vdots & \ddots & \ddots & \ddots  & a_1 \\ 
+      0 & \cdots & 0 & a_1 & a_2  \\
+    \end{bmatrix} =
+    (1+\sigma_0 k)\mathbf{I} + \frac{\sigma_1 k}{h^2}
+    \begin{bmatrix}
+      \ddots & \ddots & & & & \mathbf{0}  & \\
+      \ddots & 2 & -1 & & & & \\ 
+      & -1 & 2 & -1 & & & \\ 
+      & & -1 & 2 & -1 & & \\ 
+      & & & -1 & 2 & \ddots \\ 
+      & \mathbf{0} & & & \ddots & \ddots
+    \end{bmatrix},
+  \]
+  Ainsi : \begin{equation}\A=(1+\sigma_0 k)\mathbf{I}-\sigma_1 k \D_{xx}\end{equation}
+  
+  De même pour C :  \begin{equation}\C=(1-\sigma_0 k)\mathbf{I}+\sigma_1 k \D_{xx}\end{equation}
+
+  Quand à B, on calcule dans un premier temps l'expression de la matrice $\D_{xxxx}$
+
+  Blabla
+
+  ~\\\\
+  On obtient alors :
+ $$ \B=-2\mathbf{I}-\gamma^2 k^2 \D_{xx}+\kappa^2 k^2\D_{xxxx}, \quad $$
 
 %--- Fin Question 4 ---%
 
