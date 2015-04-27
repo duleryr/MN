@@ -275,100 +275,116 @@ Enfin, lorsque la tension augmente, la fréquence également, ce que l'on peut r
 La corde réelle est régie par l'équation aux dérivées partielles (EDP) suivante :
 
 \begin{equation} 
-\left\{
-	\begin{array}{l}
-		\displaystyle \frac{\partial^2 u}{\partial t^2}=\gamma^2 \frac{\partial^2 u}{\partial x^2}-\kappa^2  				\frac{\partial^4 u}{\partial x^4}-2\sigma_0  \frac{\partial u}{\partial t}+2\sigma_1  \frac{\partial^3 u}{\partial t		\partial x^2}\\ \\ 
-		\displaystyle u(0,t)=u(L,t)=\frac{\partial^2 u}{\partial x^2}(0,t)=\frac{\partial^2 u}{\partial x^2}(L,t)=0\\ \\  		\displaystyle u(x,0)=u_0(x), \quad \frac{\partial u}{\partial t}(x,0)=v_0(x)
-	\end{array}
-\right. 
-\label{eq:model_stiff}
-\end{equation}
+  \left\{
+    \begin{array}{l}
+      \displaystyle \frac{\partial^2 u}{\partial t^2}=\gamma^2 \frac{\partial^2 u}{\partial x^2}-\kappa^2  				\frac{\partial^4 u}{\partial x^4}-2\sigma_0  \frac{\partial u}{\partial t}+2\sigma_1  \frac{\partial^3 u}{\partial t		\partial x^2}\\ \\ 
+      \displaystyle u(0,t)=u(L,t)=\frac{\partial^2 u}{\partial x^2}(0,t)=\frac{\partial^2 u}{\partial x^2}(L,t)=0\\ \\  		\displaystyle u(x,0)=u_0(x), \quad \frac{\partial u}{\partial t}(x,0)=v_0(x)
+    \end{array}
+    \right. 
+    \label{eq:model_stiff}
+  \end{equation}
 
-\subsection*{1.2 : Discrétisation du modèle par différences finies}
+  \subsection*{1.2 : Discrétisation du modèle par différences finies}
 
-Nous allons utiliser la méthode des différences finies afin de rechercher une solution approchée de l'EDP : (\ref{eq:model_stiff}).\\\\
-Discrétisons la corde de longueur $L=1$ en $N+1$ positions $x_l=lh$ avec $0\leqslant i\leqslant N$ et $h=\frac{1}{N}$, et le temps en $NF$ instants $t_n=nk$ avec $k=\frac{1}{SR}$ (où SR est le taux d'échantillonnage, typiquement 44100 Hz). Ainsi on approche la fonction continue $u(x,t)$ par $u_l^n$ en la position $x_l=lh$ et au temps $t_n=nk$, soit $u(x_l,t_n)=u(lh,nk)\approx u_l^n$. \\
+  Nous allons utiliser la méthode des différences finies afin de rechercher une solution approchée de l'EDP : (\ref{eq:model_stiff}).\\\\
+  Discrétisons la corde de longueur $L=1$ en $N+1$ positions $x_l=lh$ avec $0\leqslant i\leqslant N$ et $h=\frac{1}{N}$, et le temps en $NF$ instants $t_n=nk$ avec $k=\frac{1}{SR}$ (où SR est le taux d'échantillonnage, typiquement 44100 Hz). Ainsi on approche la fonction continue $u(x,t)$ par $u_l^n$ en la position $x_l=lh$ et au temps $t_n=nk$, soit $u(x_l,t_n)=u(lh,nk)\approx u_l^n$. \\
 
-Les deux prochaines questions consistent en l'obtention du schéma numérique.\\
+  Les deux prochaines questions consistent en l'obtention du schéma numérique.\\
 
 %--- Question 2 ---%
 
-\question Exprimons $u(x+h,t)$ et $u(x-h,t)$ sous forme de développement de Taylor à l'ordre 2 :
+  \question Exprimons $u(x+h,t)$ et $u(x-h,t)$ sous forme de développement de Taylor à l'ordre 2 :
 
-\[
-u(x+h,t)=u(x,t)+h\frac{\partial u}{\partial x}(x,t)+\frac{h^2}{2!}\frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
-\]
-\[
-u(x-h,t)=u(x,t)-h\frac{\partial u}{\partial x}(x,t)+\frac{h^2}{2!}\frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
-\]
+  \[
+    u(x+h,t)=u(x,t)+h\frac{\partial u}{\partial x}(x,t)+\frac{h^2}{2!}\frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
+  \]
+  \[
+    u(x-h,t)=u(x,t)-h\frac{\partial u}{\partial x}(x,t)+\frac{h^2}{2!}\frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
+  \]
 
-Ainsi,
-\[
-u(x+h,t)+u(x-h,t)=2u(x,t)+h^2 \frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
-\]
+  Ainsi,
+  \[
+    u(x+h,t)+u(x-h,t)=2u(x,t)+h^2 \frac{\partial^2 u}{\partial x^2}(x,t)+o(h^2)
+  \]
 
-C'est pourquoi :
+  C'est pourquoi :
 
-\begin{equation}
-  \frac{\partial^2 u}{\partial x^2}(x,t)=\frac{u(x+h,t)-2u(x,t)+u(x-h,t)}{h^2}+o(1)
-  \label{eq:taylor}
-\end{equation}
+  \begin{equation}
+    \frac{\partial^2 u}{\partial x^2}(x,t)=\frac{u(x+h,t)-2u(x,t)+u(x-h,t)}{h^2}+o(1)
+    \label{eq:taylor}
+  \end{equation}
 
-De même, 
-\begin{equation*}
-  \frac{\partial^2 u}{\partial t^2}(x,t)=\frac{u(x,t+k)-2u(x,t)+u(x,t-k)}{k^2}+o(1)
-\end{equation*}\\
+  De même, 
+  \begin{equation*}
+    \frac{\partial^2 u}{\partial t^2}(x,t)=\frac{u(x,t+k)-2u(x,t)+u(x,t-k)}{k^2}+o(1)
+  \end{equation*}\\
 
-et donc, avec les notations introduites pour la discrétisation :
-\[
-  \begin{array}{l}
-    \displaystyle \frac{\partial^2 u}{\partial x^2}(x_l,t_k)\approx \frac{1}{h^2}(u_{l+1}^n-2u_l^n+u_{l-1}^n)\\ \\ 		\displaystyle \frac{\partial^2 u}{\partial t^2}(x_l,t_k)\approx \frac{1}{k^2}(u_{l}^{n+1}-2u_l^n+u_{l}^{n-1})\end{array}
-\]
+  et donc, avec les notations introduites pour la discrétisation :
+  \[
+    \begin{array}{l}
+      \displaystyle \frac{\partial^2 u}{\partial x^2}(x_l,t_k)\approx \frac{1}{h^2}(u_{l+1}^n-2u_l^n+u_{l-1}^n)\\ \\ 		\displaystyle \frac{\partial^2 u}{\partial t^2}(x_l,t_k)\approx \frac{1}{k^2}(u_{l}^{n+1}-2u_l^n+u_{l}^{n-1})\end{array}
+  \]
 
-De même, en remarquant que : $$u(x+2h,t)+u(x-2h,t)-4[u(x+h,t)+u(x-h,t)]+6u(x,t) = \frac{\partial^4 u}{\partial x^4}(x,t) + o(h^4)$$ On obtient :
-\[
-  \frac{\partial^4 u}{\partial x^4}(x_l,t_k)\approx \frac{1}{h^4}(u_{l+2}^n-4u_{l+1}^n+6u_l^n-4u_{l-1}^n+u_{l-2}^n)
-\]
+  De même, en remarquant que : $$u(x+2h,t)+u(x-2h,t)-4[u(x+h,t)+u(x-h,t)]+6u(x,t) = \frac{\partial^4 u}{\partial x^4}(x,t) + o(h^4)$$ On obtient :
+  \[
+    \frac{\partial^4 u}{\partial x^4}(x_l,t_k)\approx \frac{1}{h^4}(u_{l+2}^n-4u_{l+1}^n+6u_l^n-4u_{l-1}^n+u_{l-2}^n)
+  \]
 
-En dérivant chaque terme de la relation (\ref{eq:taylor}) grâce au fait que 
-\[
-  \frac{\partial u}{\partial t}(x,t)=\frac{u(x,t+k)-u(x,t-k)}{2k}+o(1) \approx \frac{u_l^{n+1}-u_l^{n-1}}{2k}
-\]
-On obtient directement :
-\[
-  \frac{\partial}{\partial t}\left(\frac{\partial^2 u}{\partial x^2}\right)\approx \frac{1}{2kh^2}(u_{l+1}^{n+1}-u_{l+1}^{n-1}-2u_{l}^{n+1}+2u_l^{n-1}+u_{l-1}^{n+1}-u_{l-1}^{n-1})
-\]
+  En dérivant chaque terme de la relation (\ref{eq:taylor}) grâce au fait que 
+  \[
+    \frac{\partial u}{\partial t}(x,t)=\frac{u(x,t+k)-u(x,t-k)}{2k}+o(1) \approx \frac{u_l^{n+1}-u_l^{n-1}}{2k}
+  \]
+  On obtient directement :
+  \[
+    \frac{\partial}{\partial t}\left(\frac{\partial^2 u}{\partial x^2}\right)\approx \frac{1}{2kh^2}(u_{l+1}^{n+1}-u_{l+1}^{n-1}-2u_{l}^{n+1}+2u_l^{n-1}+u_{l-1}^{n+1}-u_{l-1}^{n-1})
+  \]
 
-Nous avons alors approché chaque terme de l'EDP (\ref{eq:model_stiff}) par des combinaisons linéaires de points de la grille de discrétisation, et en injectant les résultats obtenus, on obtient :
-\begin{align}
-  &~~a_1u_{l-1}^{n+1}+a_2u_l^{n+1}+a_1u_{l+1}^{n+1}\\
-  +& ~~b_1u_{l-2}^n+b_2u_{l-1}^n+b_3u_l^n+b_2u_{l+1}^n+b_1u_{l+2}^n\\ 
-  +&~~ c_1u_{l-1}^{n-1}+c_2u_l^{n-1}+c_1u_{l+1}^{n-1}\\ 
-  =&~0
-\end{align}
+  Nous avons alors approché chaque terme de l'EDP (\ref{eq:model_stiff}) par des combinaisons linéaires de points de la grille de discrétisation, et en injectant les résultats obtenus, on obtient :
+  \begin{align}
+    &~~a_1u_{l-1}^{n+1}+a_2u_l^{n+1}+a_1u_{l+1}^{n+1}\\
+    +& ~~b_1u_{l-2}^n+b_2u_{l-1}^n+b_3u_l^n+b_2u_{l+1}^n+b_1u_{l+2}^n\\ 
+    +&~~ c_1u_{l-1}^{n-1}+c_2u_l^{n-1}+c_1u_{l+1}^{n-1}\\ 
+    =&~0
+  \end{align}
 
-avec 
-\[ 
-  a_1=-\frac{\sigma_1 k}{h^2},\quad a_2=1+\sigma_0 k+\frac{2\sigma_1 k}{h^2}, 
-  \quad c_1=\frac{\sigma_1 k}{h^2},\quad c_2=1-\sigma_0 k-\frac{2\sigma_1 k}{h^2}
-\]
-\[
-  b_1=\frac{\kappa^2 k^2}{h^4}, \quad b_2=-\frac{\gamma^2 k^2}{h^2}-\frac{4\kappa^2 k^2}{h^4},
-  \quad b_3=-2+\frac{2\gamma^2 k^2}{h^2}+\frac{6\kappa^2 k^2}{h^4}
-\]
-~\\
+  avec 
+  \[ 
+    a_1=-\frac{\sigma_1 k}{h^2},\quad a_2=1+\sigma_0 k+\frac{2\sigma_1 k}{h^2}, 
+    \quad c_1=\frac{\sigma_1 k}{h^2},\quad c_2=1-\sigma_0 k-\frac{2\sigma_1 k}{h^2}
+  \]
+  \[
+    b_1=\frac{\kappa^2 k^2}{h^4}, \quad b_2=-\frac{\gamma^2 k^2}{h^2}-\frac{4\kappa^2 k^2}{h^4},
+    \quad b_3=-2+\frac{2\gamma^2 k^2}{h^2}+\frac{6\kappa^2 k^2}{h^4}
+  \]
+  ~\\
 %--- Fin Question 2 ---%
 
-Nous nous intéressons désormais aux points du maillage situés à la frontière du domaine. On remarque que pour $l=1$ et $l=N-1$, on obtient respectivement $l-2=-1$ et $l+2=N+1$, on a donc besoin d'introduire des points dits \enquote{fantômes} ou \enquote{virtuels}, qu'on désigne par $u_{-1}^n$ et $u_{N+1}^n$.\\
-
-Par la suite on désignera par $\overline{\ub}^n$ le vecteur des points de discrétisation de la corde à $t=n$ 
-\[
-  \overline{\ub}^n=\begin{bmatrix}u_0^n\\ u_1^n\\ \vdots \\ u_{N-1}^n \\ u_N^n\end{bmatrix}
-\]
-~\\
+  Nous nous intéressons désormais aux points du maillage situés à la frontière du domaine. On remarque que pour $l=1$ et $l=N-1$, on obtient respectivement $l-2=-1$ et $l+2=N+1$, on a donc besoin d'introduire des points dits \enquote{fantômes} ou \enquote{virtuels}, qu'on désigne par $u_{-1}^n$ et $u_{N+1}^n$.\\
+  ~\\
 %--- Question 3 ---%
 
-  \question Montrer en utilisant les conditions aux limites que $u_{-1}=-u_1$ et $u_{N+1}=-u_{N-1}$ puis que le schéma numérique peut s'écrire sous forme matricielle 
+  \question D'après la question précédente, on a :
+  \[
+    \frac{\partial^2 u}{\partial x^2}(x_l,t_k)\approx \frac{1}{h^2}(u_{l+1}^n-2u_l^n+u_{l-1}^n)
+  \]
+  Or les conditions aux limites imposent :
+  \[
+    \frac{\partial^2 u}{\partial x^2}(0,t)=\frac{\partial^2 u}{\partial x^2}(L,t)=0\
+  \]
+
+  Ainsi, on a :
+  \[
+    \frac{1}{h^2}(u_{1}^n-2u_0^n+u_{1}^n) \approx 0
+  \]
+  Or, la corde étant fixée aux extrémités, on a : $\forall n, u_0^n = u_N^n = 0$\\
+  On obtient alors $u_{-1}=-u_1$. De même, on obtient $u_{N+1}=-u_{N-1}$ à l'autre extrémité.\\
+
+  Par la suite on désignera par $\overline{\ub}^n$ le vecteur des points de discrétisation de la corde à $t=n$ 
+  \[
+    \overline{\ub}^n=\begin{bmatrix}u_0^n\\ u_1^n\\ \vdots \\ u_{N-1}^n \\ u_N^n\end{bmatrix}
+  \]
+
+  puis que le schéma numérique peut s'écrire sous forme matricielle
   \begin{equation}
     \overline{\A} \overline{\ub}^{n+1}+\overline{\B} \overline{\ub}^n+\overline{\C} \overline{\ub}^{n-1}=0
   \end{equation} 
@@ -408,55 +424,55 @@ Par la suite on désignera par $\overline{\ub}^n$ le vecteur des points de discr
 
 %--- Fin Question 3 ---%
 
-Notons que les $u_0^n$ et $u_{N}^n$ sont connus et valent zéro, on peut donc ne pas en tenir compte dans les calculs, ce qui revient à considérer le vecteur 
-\[
-  \ub^n=\begin{bmatrix}u_1^n\\ \vdots \\ u_{N-1}^n\end{bmatrix}
-\]
-et les sous-matrices centrales de taille $(N-1)\times (N-1)$ : $\A$, $\B$ et $\C$ respectivement de $\overline{\A}$, $\overline{\B}$ et $\overline{\C}$, pour lesquelles on a supprimé la première et dernière ligne et colonne, à savoir :
+  Notons que les $u_0^n$ et $u_{N}^n$ sont connus et valent zéro, on peut donc ne pas en tenir compte dans les calculs, ce qui revient à considérer le vecteur 
+  \[
+    \ub^n=\begin{bmatrix}u_1^n\\ \vdots \\ u_{N-1}^n\end{bmatrix}
+  \]
+  et les sous-matrices centrales de taille $(N-1)\times (N-1)$ : $\A$, $\B$ et $\C$ respectivement de $\overline{\A}$, $\overline{\B}$ et $\overline{\C}$, pour lesquelles on a supprimé la première et dernière ligne et colonne, à savoir :
 
-\[
-  \A=
-  \begin{bmatrix} 
-    a_2 & a_1 & 0 & \cdots & 0 \\ 
-    a_1 & a_2 & a_1 & \ddots & \vdots \\ 
-    0 & a_1 & a_2 & \ddots  & 0 \\ 
-    \vdots & \ddots & \ddots & \ddots  & a_1 \\ 
-    0 & \cdots & 0 & a_1 & a_2  \\
-  \end{bmatrix},\quad 
-  \C=
-  \begin{bmatrix} 
-    c_2 & c_1 & 0 & \cdots & 0 \\ 
-    c_1 & c_2 & c_1 & \ddots & \vdots \\ 
-    0 & c_1 & c_2 & \ddots  & 0 \\ 
-    \vdots & \ddots & \ddots & \ddots  & c_1 \\ 
-    0 & \cdots & 0 & c_1 & c_2  \\
-  \end{bmatrix},
-\]
-\[
-  \B=
-  \begin{bmatrix}
-    b_3-b_1 & b_2 & b_1 & 0 & \cdots & 0  \\ 
-    b_2 & b_3 & b_2 & b_1 & \ddots & \vdots \\  
-    b_1 & b_2 & b_3 & b_2 & \ddots & 0 \\ 
-    0 & \ddots & \ddots & \ddots & \ddots &b_1\\ 
-    \vdots & \ddots & b_1 & b_2 & b_3 & b_2  \\ 
-    0 & \cdots &  0 & b_1 & b_2 & b_3-b_1  \\
-  \end{bmatrix}
-\]
+  \[
+    \A=
+    \begin{bmatrix} 
+      a_2 & a_1 & 0 & \cdots & 0 \\ 
+      a_1 & a_2 & a_1 & \ddots & \vdots \\ 
+      0 & a_1 & a_2 & \ddots  & 0 \\ 
+      \vdots & \ddots & \ddots & \ddots  & a_1 \\ 
+      0 & \cdots & 0 & a_1 & a_2  \\
+    \end{bmatrix},\quad 
+    \C=
+    \begin{bmatrix} 
+      c_2 & c_1 & 0 & \cdots & 0 \\ 
+      c_1 & c_2 & c_1 & \ddots & \vdots \\ 
+      0 & c_1 & c_2 & \ddots  & 0 \\ 
+      \vdots & \ddots & \ddots & \ddots  & c_1 \\ 
+      0 & \cdots & 0 & c_1 & c_2  \\
+    \end{bmatrix},
+  \]
+  \[
+    \B=
+    \begin{bmatrix}
+      b_3-b_1 & b_2 & b_1 & 0 & \cdots & 0  \\ 
+      b_2 & b_3 & b_2 & b_1 & \ddots & \vdots \\  
+      b_1 & b_2 & b_3 & b_2 & \ddots & 0 \\ 
+      0 & \ddots & \ddots & \ddots & \ddots &b_1\\ 
+      \vdots & \ddots & b_1 & b_2 & b_3 & b_2  \\ 
+      0 & \cdots &  0 & b_1 & b_2 & b_3-b_1  \\
+    \end{bmatrix}
+  \]
 
-On définit la matrice Toeplitz suivante et son carré : 
-\[
-  \D_{xx}=\frac{1}{h^2}
-  \begin{bmatrix}
-    \ddots & \ddots & & & & \mathbf{0}  & \\
-    \ddots & -2 & 1 & & & & \\ 
-    & 1 & -2 & 1 & & & \\ 
-    & & 1 & -2 & 1 & & \\ 
-    & & & 1 & -2 & \ddots \\ 
-    & \mathbf{0} & & & \ddots & \ddots
-  \end{bmatrix}, 
-  \quad \D_{xxxx}=\D_{xx}\D_{xx}
-\]
+  On définit la matrice Toeplitz suivante et son carré : 
+  \[
+    \D_{xx}=\frac{1}{h^2}
+    \begin{bmatrix}
+      \ddots & \ddots & & & & \mathbf{0}  & \\
+      \ddots & -2 & 1 & & & & \\ 
+      & 1 & -2 & 1 & & & \\ 
+      & & 1 & -2 & 1 & & \\ 
+      & & & 1 & -2 & \ddots \\ 
+      & \mathbf{0} & & & \ddots & \ddots
+    \end{bmatrix}, 
+    \quad \D_{xxxx}=\D_{xx}\D_{xx}
+  \]
 
 %--- Question 4 ---%
 
@@ -464,16 +480,16 @@ On définit la matrice Toeplitz suivante et son carré :
 
 %--- Fin Question 4 ---%
 
-\hspace{0.5cm} $\blacksquare$ \textbf{Stabilité du schéma numérique} \\
+  \hspace{0.5cm} $\blacksquare$ \textbf{Stabilité du schéma numérique} \\
 
-Par une analyse de Von Neumann on montre que la condition de stabilité du schéma s'écrit 
-\[
-  h\geqslant h_{min}=\sqrt{\frac{\gamma^2k^2+\sqrt{\gamma^4 k^4+16\kappa^2 k^2}}{2}}
-\]
+  Par une analyse de Von Neumann on montre que la condition de stabilité du schéma s'écrit 
+  \[
+    h\geqslant h_{min}=\sqrt{\frac{\gamma^2k^2+\sqrt{\gamma^4 k^4+16\kappa^2 k^2}}{2}}
+  \]
 
-\subsection*{1.3 : Programmation du schéma implicite sous Scilab}
+  \subsection*{1.3 : Programmation du schéma implicite sous Scilab}
 
-\hspace{0.5cm} $\blacksquare$ \textbf{Choix des paramètres} $\sigma_0$  \textbf{et}  $\sigma_1$\\
+  \hspace{0.5cm} $\blacksquare$ \textbf{Choix des paramètres} $\sigma_0$  \textbf{et}  $\sigma_1$\\
 
 %--- Question 5 ---%
 
@@ -496,27 +512,27 @@ Par une analyse de Von Neumann on montre que la condition de stabilité du sché
 
 %--- Fin Question 5 ---%
 
-On définira ainsi comme paramètre un vecteur de perte $loss=[\omega_1/2\pi,T_{60}(\omega_1) ; \omega_2/2\pi,T_{60}(\omega_2)]$ servant à calculer $\sigma_0$ et $\sigma_1$. \\
+  On définira ainsi comme paramètre un vecteur de perte $loss=[\omega_1/2\pi,T_{60}(\omega_1) ; \omega_2/2\pi,T_{60}(\omega_2)]$ servant à calculer $\sigma_0$ et $\sigma_1$. \\
 
-\hspace{0.5cm} $\blacksquare$ \textbf{Conditions initiales} $u_0(x)$ \textbf{et} $v_0(x)$\\
+  \hspace{0.5cm} $\blacksquare$ \textbf{Conditions initiales} $u_0(x)$ \textbf{et} $v_0(x)$\\
 
-A l'instant $t=0$ la corde est pincée à l'abscisse $x=x_0$ et étirée à la hauteur $c_0$, donc on considèrera $u(x,0)=u_0(x)$ une fonction triangle comme illustrée sur la Figure \ref{fig:triangle}. De plus on suppose que la corde est lâchée sans vitesse initiale donc $v_0(x)=0$.\\
-
-
-\hspace{0.5cm} $\blacksquare$ \textbf{Enregistrement stéréo et positionnement des micros}\\
+  A l'instant $t=0$ la corde est pincée à l'abscisse $x=x_0$ et étirée à la hauteur $c_0$, donc on considèrera $u(x,0)=u_0(x)$ une fonction triangle comme illustrée sur la Figure \ref{fig:triangle}. De plus on suppose que la corde est lâchée sans vitesse initiale donc $v_0(x)=0$.\\
 
 
-\begin{lstlisting}[frame=single,caption=Paramètres d'entrée]  
-start
-SR = 44100;                  // taux d'échantillonage 
-B = 0.001;                   // paramètre d'inharmonicité
-f = 110;                     // fréquence fondamentale
-TF = 4;			     // durée de la simulation
-xo = 0.1;                    // position où la corde est pincée
-co = 1;                      // hauteur du pincement
-rp = [0.3 0.7];              // positions des micros
-loss = [100, 10; 1000, 8];   // couples de fréquence/temps décroissance
-\end{lstlisting}
+  \hspace{0.5cm} $\blacksquare$ \textbf{Enregistrement stéréo et positionnement des micros}\\
+
+
+  \begin{lstlisting}[frame=single,caption=Paramètres d'entrée]  
+  start
+  SR = 44100;                  // taux d'échantillonage 
+  B = 0.001;                   // paramètre d'inharmonicité
+  f = 110;                     // fréquence fondamentale
+  TF = 4;			     // durée de la simulation
+  xo = 0.1;                    // position où la corde est pincée
+  co = 1;                      // hauteur du pincement
+  rp = [0.3 0.7];              // positions des micros
+  loss = [100, 10; 1000, 8];   // couples de fréquence/temps décroissance
+  \end{lstlisting}
 
 %--- Question 6 ---%
 
@@ -529,12 +545,12 @@ loss = [100, 10; 1000, 8];   // couples de fréquence/temps décroissance
 
 %--- Fin Question 6 ---%
 
-Vous pourrez écrire les matrices $A,B,C$ directement via les commandes \verb"toeplitz" et \verb"sparse".
-Pour une aide Scilab quant à la réalisation de l'animation et du son, se référer à l'annexe.
+  Vous pourrez écrire les matrices $A,B,C$ directement via les commandes \verb"toeplitz" et \verb"sparse".
+  Pour une aide Scilab quant à la réalisation de l'animation et du son, se référer à l'annexe.
 
-\subsection*{1.4 : Analyses qualitative et quantitative du son produit}
+  \subsection*{1.4 : Analyses qualitative et quantitative du son produit}
 
-On commence par s'assurer que la note simulée correspond bien à la fréquence fondamentale en entrée. Par exemple pour $f=110~Hz$, la note LA, vous pouvez vérifier avec une vraie guitare ou encore en décrochant votre téléphone (la tonalité est un LA par défaut). Mais on se propose ici de le vérifier mathématiquement (après tout votre instrument est peut-être mal accordé). 
+  On commence par s'assurer que la note simulée correspond bien à la fréquence fondamentale en entrée. Par exemple pour $f=110~Hz$, la note LA, vous pouvez vérifier avec une vraie guitare ou encore en décrochant votre téléphone (la tonalité est un LA par défaut). Mais on se propose ici de le vérifier mathématiquement (après tout votre instrument est peut-être mal accordé). 
 
 %--- Question 7 ---%
 
@@ -547,97 +563,97 @@ On commence par s'assurer que la note simulée correspond bien à la fréquence 
 
 %--- Fin Question 7 ---%
 
-\newpage
+  \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 						                  	PARTIE II         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Partie II : Modélisation de la membrane tympanique}
+  \section*{Partie II : Modélisation de la membrane tympanique}
 
-Dans cette partie, la propagation d'ondes en deux dimensions est illustrée par une vibration transverse d'une membrane élastique.
+  Dans cette partie, la propagation d'ondes en deux dimensions est illustrée par une vibration transverse d'une membrane élastique.
 
-\subsection*{2.1 : Modélisation physique d'une membrane circulaire libre fixée sur les bords}
+  \subsection*{2.1 : Modélisation physique d'une membrane circulaire libre fixée sur les bords}
 
-On note $\Omega$ le domaine occupé par la membrane de masse par unité de surface $\rho$ constante. Considérons un petit élément de surface $dxdy$ soumis à des forces de tension $T$  dans les directions $x$ et $y$, une force extérieure de densité surfacique $f(x,y,t)$ et $w(x,y,t)$ la position transversale du point de coordonnées $(x,y)$ à l'instant $t$. D'après la seconde loi de Newton la somme des forces s'exerçant sur $dxdy$ s'écrivent : 
-\[
-  F=\rho  \frac{\partial^2 w}{\partial t^2}(x,y)dxdy
-\]
-Sachant que la membrane est soumise aux forces suivantes représentées Figure \ref{fig:membrane}, à savoir 4 tensions : $F_1=-Tdy\frac{\partial w}{\partial x}(x,y,t)$, $F_2=Tdy\frac{\partial w}{\partial x}(x+dx,y,t)$, $F_3=-Tdx\frac{\partial w}{\partial y}(x,y,t)$, $F_4=Tdx\frac{\partial w}{\partial y}(x,y+dy,t)$ et une force extérieure $F_5=f(x,y,t)dxdy$, la somme des forces s'écrit : 
-\[
-  F=Tdy\left[\frac{\partial w}{\partial x}(x+dx,y,t)-\frac{\partial w}{\partial x}(x,y,t)\right]+Tdx\left[\frac{\partial w}{\partial y}(x,y+dy,t)-\frac{\partial w}{\partial y}(x,y,t)\right]+f(x,y,t)dxdy
-\]
-
-Or les termes entre crochets valent $\dfrac{\partial^2 w}{\partial x^2}$ et $\dfrac{\partial^2 w}{\partial y^2}$ d'où pour $f=0$ la membrane vérifie l'équation 
-\[
-  \rho \dfrac{\partial^2 w}{\partial t^2}=T \Delta w
-\]
-où $\Delta$ est l'opérateur laplacien définit par 
-\[
-  \Delta w=\dfrac{\partial^2 w}{\partial x^2}+\dfrac{\partial^2 w}{\partial y^2}
-\]
-
-
-On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée $T_f$ solution de :
-\begin{equation}
-  \left\{
-    \begin{array}{rl}
-      \rho \dfrac{\partial^2 w}{\partial t^2} & =  T \Delta w ~\textrm{dans } ~ \Omega_T = \Omega \times (0,T_f)\\ 
-      w(x,y,t)& =  0 ~\textrm{sur} ~ \Gamma_T=\Gamma \times (0,T_f)\\
-      w(x,y,0)& = w_0(x,y) ~ \textrm{sur} ~\Omega \\
-      \dfrac{\partial w(x,y,0)}{\partial t} & = 0 ~\textrm{sur} ~\Omega 
-    \end{array}
-    \right.
-    \label{eq:membranemodel}
-  \end{equation}
-
-  Comme pour la corde de guitare, la membrane est fixée sur le bord circulaire (deuxième équation, condition de type Dirichlet), possède un déplacement initial $w_0(x,y)$ (troisième équation) et une vitesse initiale nulle (quatrième équation). Afin de modéliser la vibration d'une membrane circulaire, il est plus pratique d'utiliser les coordonnées polaires, notamment pour l'écriture des conditions aux bords. On note $a>0$ le rayon de la membrane circulaire : 
+  On note $\Omega$ le domaine occupé par la membrane de masse par unité de surface $\rho$ constante. Considérons un petit élément de surface $dxdy$ soumis à des forces de tension $T$  dans les directions $x$ et $y$, une force extérieure de densité surfacique $f(x,y,t)$ et $w(x,y,t)$ la position transversale du point de coordonnées $(x,y)$ à l'instant $t$. D'après la seconde loi de Newton la somme des forces s'exerçant sur $dxdy$ s'écrivent : 
   \[
-    \Omega=\{(x,y)\in \R^2, x^2+y^2 \leq a^2\}, \quad \Gamma=\{(x,y)\in \Omega,  x^2+y^2 = a^2\}
+    F=\rho  \frac{\partial^2 w}{\partial t^2}(x,y)dxdy
+  \]
+  Sachant que la membrane est soumise aux forces suivantes représentées Figure \ref{fig:membrane}, à savoir 4 tensions : $F_1=-Tdy\frac{\partial w}{\partial x}(x,y,t)$, $F_2=Tdy\frac{\partial w}{\partial x}(x+dx,y,t)$, $F_3=-Tdx\frac{\partial w}{\partial y}(x,y,t)$, $F_4=Tdx\frac{\partial w}{\partial y}(x,y+dy,t)$ et une force extérieure $F_5=f(x,y,t)dxdy$, la somme des forces s'écrit : 
+  \[
+    F=Tdy\left[\frac{\partial w}{\partial x}(x+dx,y,t)-\frac{\partial w}{\partial x}(x,y,t)\right]+Tdx\left[\frac{\partial w}{\partial y}(x,y+dy,t)-\frac{\partial w}{\partial y}(x,y,t)\right]+f(x,y,t)dxdy
   \]
 
-  Soit $(x,y)$ les coordonnées cartésiennes d'un point de la membrane et $(r,\theta)$ ses coordonnées dans la base polaire on a :
-  \begin{center}
-    \begin{minipage}[l]{.9\linewidth}
+  Or les termes entre crochets valent $\dfrac{\partial^2 w}{\partial x^2}$ et $\dfrac{\partial^2 w}{\partial y^2}$ d'où pour $f=0$ la membrane vérifie l'équation 
+  \[
+    \rho \dfrac{\partial^2 w}{\partial t^2}=T \Delta w
+  \]
+  où $\Delta$ est l'opérateur laplacien définit par 
+  \[
+    \Delta w=\dfrac{\partial^2 w}{\partial x^2}+\dfrac{\partial^2 w}{\partial y^2}
+  \]
 
-      \begin{minipage}[l]{.4\linewidth}
-	\begin{equation*} 
-	  \left\{ 
-	    \begin{array}{rcl}
-	      x=r\cos(\theta) \\
-	      y=r\sin(\theta)
-	    \end{array} 
-	    \right.
-	  \end{equation*}
-	\end{minipage}
-	et
-	\begin{minipage}[r]{.4\linewidth}
+
+  On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée $T_f$ solution de :
+  \begin{equation}
+    \left\{
+      \begin{array}{rl}
+	\rho \dfrac{\partial^2 w}{\partial t^2} & =  T \Delta w ~\textrm{dans } ~ \Omega_T = \Omega \times (0,T_f)\\ 
+	w(x,y,t)& =  0 ~\textrm{sur} ~ \Gamma_T=\Gamma \times (0,T_f)\\
+	w(x,y,0)& = w_0(x,y) ~ \textrm{sur} ~\Omega \\
+	\dfrac{\partial w(x,y,0)}{\partial t} & = 0 ~\textrm{sur} ~\Omega 
+      \end{array}
+      \right.
+      \label{eq:membranemodel}
+    \end{equation}
+
+    Comme pour la corde de guitare, la membrane est fixée sur le bord circulaire (deuxième équation, condition de type Dirichlet), possède un déplacement initial $w_0(x,y)$ (troisième équation) et une vitesse initiale nulle (quatrième équation). Afin de modéliser la vibration d'une membrane circulaire, il est plus pratique d'utiliser les coordonnées polaires, notamment pour l'écriture des conditions aux bords. On note $a>0$ le rayon de la membrane circulaire : 
+    \[
+      \Omega=\{(x,y)\in \R^2, x^2+y^2 \leq a^2\}, \quad \Gamma=\{(x,y)\in \Omega,  x^2+y^2 = a^2\}
+    \]
+
+    Soit $(x,y)$ les coordonnées cartésiennes d'un point de la membrane et $(r,\theta)$ ses coordonnées dans la base polaire on a :
+    \begin{center}
+      \begin{minipage}[l]{.9\linewidth}
+
+	\begin{minipage}[l]{.4\linewidth}
 	  \begin{equation*} 
 	    \left\{ 
 	      \begin{array}{rcl}
-		r=\sqrt{x^2+y^2} \\
-		\theta=\arctan(\frac{y}{x})
+		x=r\cos(\theta) \\
+		y=r\sin(\theta)
 	      \end{array} 
 	      \right.
 	    \end{equation*}
 	  \end{minipage}
+	  et
+	  \begin{minipage}[r]{.4\linewidth}
+	    \begin{equation*} 
+	      \left\{ 
+		\begin{array}{rcl}
+		  r=\sqrt{x^2+y^2} \\
+		  \theta=\arctan(\frac{y}{x})
+		\end{array} 
+		\right.
+	      \end{equation*}
+	    \end{minipage}
 
-	\end{minipage}
-      \end{center}
+	  \end{minipage}
+	\end{center}
 
-      avec $r \in[0,a]$ et $\theta  \in [0,2\pi]$. On peut alors calculer les dérivées partielles de $u$ dans la base polaire $(r,\theta)$ en utilisant les formules suivantes :
-      \[
-	\dfrac{\partial w}{\partial x}=\left(\dfrac{\partial w}{\partial r}\right)\left(\dfrac{\partial r}{\partial x}\right)+\left(\dfrac{\partial w}{\partial \theta}\right)\left(\dfrac{\partial \theta}{\partial x}\right)
-      \]
-      \[
-	\dfrac{\partial w}{\partial y}=\left(\dfrac{\partial w}{\partial r}\right)\left(\dfrac{\partial r}{\partial y}\right)+\left(\dfrac{\partial w}{\partial \theta}\right)\left(\dfrac{\partial \theta}{\partial y}\right)
-      \]
+	avec $r \in[0,a]$ et $\theta  \in [0,2\pi]$. On peut alors calculer les dérivées partielles de $u$ dans la base polaire $(r,\theta)$ en utilisant les formules suivantes :
+	\[
+	  \dfrac{\partial w}{\partial x}=\left(\dfrac{\partial w}{\partial r}\right)\left(\dfrac{\partial r}{\partial x}\right)+\left(\dfrac{\partial w}{\partial \theta}\right)\left(\dfrac{\partial \theta}{\partial x}\right)
+	\]
+	\[
+	  \dfrac{\partial w}{\partial y}=\left(\dfrac{\partial w}{\partial r}\right)\left(\dfrac{\partial r}{\partial y}\right)+\left(\dfrac{\partial w}{\partial \theta}\right)\left(\dfrac{\partial \theta}{\partial y}\right)
+	\]
 
-      On introduit les variables adimensionnées suivantes 
-      \[
-	\eta=\dfrac{r}{a},\tau=\dfrac{ct}{a}
-      \]
-      où $c=\sqrt{\frac{T}{\rho}}$ représente la vitesse de propagation  de l'onde.\\ 
+	On introduit les variables adimensionnées suivantes 
+	\[
+	  \eta=\dfrac{r}{a},\tau=\dfrac{ct}{a}
+	\]
+	où $c=\sqrt{\frac{T}{\rho}}$ représente la vitesse de propagation  de l'onde.\\ 
 
 %--- Question 8 ---%
 
@@ -664,29 +680,29 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 
 %--- Fin Question 8 ---%
 
-	\subsection*{2.2 : Discrétisation polaire de la surface 2D par un schéma explicite }
-	Le but de cette partie est de discrétiser l'équation des ondes dans la base polaire (\ref{eq:polarmodel}) en utilisant un schéma explicite. Pour cela considérons dans un premier temps une discrétisation de $\Omega $ suivant une grille cartésienne $[0,N_x]\times [0,N_y]$ de pas uniforme $dx$, $dy$, formée par des points de coordonnées $(x_i,y_j)$ tel que :
-	\begin{equation*}{}
-	  \left\{
-	    \begin{array}{rl}
-	      x_i &=i dx,\quad 0\leq i \leq N_x \\
-	      y_j &=j dy,\quad  0\leq j \leq N_y \\
-	      dx & =\frac{1}{N_x+1}\\
-	      dy &=\frac{1}{N_y+1}\\
-	    \end{array}
-	    \right.
-	  \end{equation*}
-	  On note $dt$ le pas de temps et on approche la solution $w(x_i,y_j,ndt)$ par $w_{ij}^{n}$. Le laplacien est discrétisé  par un schéma centré d'ordre deux  et on utilise un schéma explicite d'ordre deux en temps. L'ordre de ces schémas peut être vérifié en utilisant un développement de Taylor. Le schéma explicite obtenue pour l'équation des ondes (\ref{eq:membranemodel}) est :
-
-	  \begin{equation}
+	  \subsection*{2.2 : Discrétisation polaire de la surface 2D par un schéma explicite }
+	  Le but de cette partie est de discrétiser l'équation des ondes dans la base polaire (\ref{eq:polarmodel}) en utilisant un schéma explicite. Pour cela considérons dans un premier temps une discrétisation de $\Omega $ suivant une grille cartésienne $[0,N_x]\times [0,N_y]$ de pas uniforme $dx$, $dy$, formée par des points de coordonnées $(x_i,y_j)$ tel que :
+	  \begin{equation*}{}
 	    \left\{
 	      \begin{array}{rl}
-		\dfrac{w_{ij}^{n+1}-2w_{ij}^{n}+w_{ij}^{n-1}}{dt^{2}}=c^2\dfrac{w_{i+1,j}^{n}-2w_{i,j}^{n}+w_{i-1,j}^{n}}
-		{dx^{2}}+c^2\dfrac{w_{i,j+1}^{n}-2w_{i,j}^{n}+w_{i,j-1}^{n}}{dy^{2}}
+		x_i &=i dx,\quad 0\leq i \leq N_x \\
+		y_j &=j dy,\quad  0\leq j \leq N_y \\
+		dx & =\frac{1}{N_x+1}\\
+		dy &=\frac{1}{N_y+1}\\
 	      \end{array}
 	      \right.
-	      \label{eq:diffcartesiennes}
-	    \end{equation}
+	    \end{equation*}
+	    On note $dt$ le pas de temps et on approche la solution $w(x_i,y_j,ndt)$ par $w_{ij}^{n}$. Le laplacien est discrétisé  par un schéma centré d'ordre deux  et on utilise un schéma explicite d'ordre deux en temps. L'ordre de ces schémas peut être vérifié en utilisant un développement de Taylor. Le schéma explicite obtenue pour l'équation des ondes (\ref{eq:membranemodel}) est :
+
+	    \begin{equation}
+	      \left\{
+		\begin{array}{rl}
+		  \dfrac{w_{ij}^{n+1}-2w_{ij}^{n}+w_{ij}^{n-1}}{dt^{2}}=c^2\dfrac{w_{i+1,j}^{n}-2w_{i,j}^{n}+w_{i-1,j}^{n}}
+		  {dx^{2}}+c^2\dfrac{w_{i,j+1}^{n}-2w_{i,j}^{n}+w_{i,j-1}^{n}}{dy^{2}}
+		\end{array}
+		\right.
+		\label{eq:diffcartesiennes}
+	      \end{equation}
 
 %--- Question 9 ---%
 
@@ -700,18 +716,18 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 
 %--- Fin Question 10 ---%
 
-	    On montre qu'une condition limite en $\eta=0$ sur la grille polaire se détermine en utilisant le schéma explicite en coordonnées cartésiennes (\ref{eq:diffcartesiennes}), on obtient :
-	    \[
-	      \dfrac{w_0^{n+1}-2 w_0^{n}+ w_{0}^{n-1}}{dt^2}=\dfrac{4}{d \eta^2}\left(\frac{1}{N_\theta} \sum_{j=1}^{N_\theta} w_{1,j}-w_{0}^{n}\right)
-	    \]
+	      On montre qu'une condition limite en $\eta=0$ sur la grille polaire se détermine en utilisant le schéma explicite en coordonnées cartésiennes (\ref{eq:diffcartesiennes}), on obtient :
+	      \[
+		\dfrac{w_0^{n+1}-2 w_0^{n}+ w_{0}^{n-1}}{dt^2}=\dfrac{4}{d \eta^2}\left(\frac{1}{N_\theta} \sum_{j=1}^{N_\theta} w_{1,j}-w_{0}^{n}\right)
+	      \]
 
-	    \subsection*{2.3 : Stabilité et précision du schéma}
+	      \subsection*{2.3 : Stabilité et précision du schéma}
 
-	    \subsubsection{Etude de la stabilité}
-	    Commencons par une étude de la stabilité du schéma explicite (10), pour cela on remplace $w_{i,j}^{n}$ dans l'équation discrétisée, par une solution décomposée en modes de fourier: 
-	    \[
-	      W_{p_{i,j}}^{n}=\phi^n e^{i\alpha_1(idx)}e^{i\alpha_2(jdy)}
-	    \]
+	      \subsubsection{Etude de la stabilité}
+	      Commencons par une étude de la stabilité du schéma explicite (10), pour cela on remplace $w_{i,j}^{n}$ dans l'équation discrétisée, par une solution décomposée en modes de fourier: 
+	      \[
+		W_{p_{i,j}}^{n}=\phi^n e^{i\alpha_1(idx)}e^{i\alpha_2(jdy)}
+	      \]
 
 %--- Question 11 ---%
 
@@ -734,17 +750,17 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 
 %--- Fin Question 11 ---%
 
-	    Ainsi en posant $\displaystyle h=\dfrac{dxdy}{\sqrt{dx^2+dy^2}}$ on obtient la condition de courant : 
-	    \begin{equation}
-	      \begin{array}{l}
-		CFL=c\dfrac{dt}{h} \leq 1~[\textrm{Cartésien}] \\ \\
-		\displaystyle CFL=\frac{d \tau}{d \eta d \theta}\leq 1~[\textrm{Polaire}]
-	      \end{array}
-	      \label{eq:CFL}
-	    \end{equation}
+	      Ainsi en posant $\displaystyle h=\dfrac{dxdy}{\sqrt{dx^2+dy^2}}$ on obtient la condition de courant : 
+	      \begin{equation}
+		\begin{array}{l}
+		  CFL=c\dfrac{dt}{h} \leq 1~[\textrm{Cartésien}] \\ \\
+		  \displaystyle CFL=\frac{d \tau}{d \eta d \theta}\leq 1~[\textrm{Polaire}]
+		\end{array}
+		\label{eq:CFL}
+	      \end{equation}
 
-	    \subsubsection{Etude de la consistance}
-	    On souhaite étudier la précision du schéma explicite (\ref{eq:diffcartesiennes}) en coordonnées cartésiennes.
+	      \subsubsection{Etude de la consistance}
+	      On souhaite étudier la précision du schéma explicite (\ref{eq:diffcartesiennes}) en coordonnées cartésiennes.
 
 %--- Question 12 ---%
 
@@ -757,12 +773,12 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 
 %--- Fin Question 12 ---%
 
-	    \subsection*{2.4 : Solutions analytiques }
-	    On cherche une solution de notre équation d'onde polaire sous la forme :
-	    \[
-	      w(\eta,\theta,\tau)=F(\eta,\theta)\cos(\omega \tau)
-	    \]
-	    avec $\omega$ la fréquence de vibration de l'onde et $F$ l'amplitude.
+	      \subsection*{2.4 : Solutions analytiques }
+	      On cherche une solution de notre équation d'onde polaire sous la forme :
+	      \[
+		w(\eta,\theta,\tau)=F(\eta,\theta)\cos(\omega \tau)
+	      \]
+	      avec $\omega$ la fréquence de vibration de l'onde et $F$ l'amplitude.
 
 %--- Question 13 ---%
 
@@ -779,73 +795,73 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 
 %--- Fin Question 13 ---%
 
-	    \begin{table}
-	      \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-		  \hline
-		  $\lambda_{n,m}$&$m=1$  &$m=2$ & $m=3$ &$ m=4$&$m=5$\\
-		  \hline
-		  $n=0$&2.40483&$5.52008$&$8.65373$&$11.79153$&$14.93092$\\
-		  \hline
-		  $n=1$&$3.83171$&$7.01559$&$10.17347$&$13.32369$&$16.47063$\\
-		  \hline
-		  $n=2$&$5.13562$&$8.41724$&$11.61984$&$14.79595$&$17.95982$\\
-		  \hline
-		  $n=3$&$6.38016$&$9.76102$&$13.01520$&$16.22347$&$19.40942$\\
-		  \hline
-		  $n=4$&$7.58834$&$11.06471$&$14.37254$&$17.61597$&$20.82693$\\
-		  \hline
-		\end{tabular}
-		\caption{Valeurs des cinq premiers zéros des fonctions de Bessel $J_n$.}
-	      \end{center}
-	    \end{table}
+	      \begin{table}
+		\begin{center}
+		  \begin{tabular}{|c|c|c|c|c|c|}
+		    \hline
+		    $\lambda_{n,m}$&$m=1$  &$m=2$ & $m=3$ &$ m=4$&$m=5$\\
+		    \hline
+		    $n=0$&2.40483&$5.52008$&$8.65373$&$11.79153$&$14.93092$\\
+		    \hline
+		    $n=1$&$3.83171$&$7.01559$&$10.17347$&$13.32369$&$16.47063$\\
+		    \hline
+		    $n=2$&$5.13562$&$8.41724$&$11.61984$&$14.79595$&$17.95982$\\
+		    \hline
+		    $n=3$&$6.38016$&$9.76102$&$13.01520$&$16.22347$&$19.40942$\\
+		    \hline
+		    $n=4$&$7.58834$&$11.06471$&$14.37254$&$17.61597$&$20.82693$\\
+		    \hline
+		  \end{tabular}
+		  \caption{Valeurs des cinq premiers zéros des fonctions de Bessel $J_n$.}
+		\end{center}
+	      \end{table}
 
-	    Les solutions de cette équation sont les fonctions de Bessel. Par ailleurs, c'est une équation du second ordre il existe donc deux solutions linéairement indépendantes. La solution est donc de la forme :
-	    \[
-	      F_n(\eta)=d_nJ_n(\eta)+e_nY_n(\eta)
-	    \]
-	    avec les fonctions de Bessel d'ordre $n$ de première et deuxième espèce suivantes :
-	    \[
-	      J_n(\eta)=\left(\dfrac{\eta}{2}\right)^n\sum_{m=0}^{\infty} \dfrac{(-\eta^2/4)^m}{m!\int_0^{\infty}e^{-t}t^{n+m}dt}
-	    \]
-	    \[
-	      Y_n(\eta)=\dfrac{J_n(\eta)\cos(n\pi)-J_{-n}(\eta)}{\sin(n\pi)}
-	    \]
-	    Or les fonctions $Y_n(x)$ divergent au centre de la membrane $(\eta\rightarrow 0)$ donc $e_n=0$
-	    ainsi la solution analytique de l'équation (\ref{eq:polarmodel}) est donnée par :
-	    \[
-	      w(\eta,\theta,\tau)=\cos(\omega \tau)\sum_n d_nJ_n(\omega\eta)\cos(n\theta)
-	    \]
-	    On sélectionne les fréquences en utilisant les conditions limites. Par exemple, dans le cas $n=0$, 
-	    \[
-	      w(\eta,\theta,\tau)=\cos(\omega \tau) d_0J_0(\omega \eta)
-	    \]
-	    ainsi $\omega$ décrit les zéros de $J_0$ puisque la condition aux bords est $w(1,\theta,\tau)=0$. Si on note $\lambda_{m,0}$ la suite de ces zéros, on obtient les fréquences propres de vibration de la membrane :
-	    \[
-	      \eta_{m,0}=\dfrac{\lambda_{m,0}}{2\pi a} \sqrt{\frac{T}{\rho}}
-	    \]
-	    En notant $\lambda_{m,n}$ la $m$-ième racine de $J_n$, on obtient de même 
-	    \[
-	      \eta_{m,n}=\dfrac{\lambda_{m,n}}{2\pi a} \sqrt{\frac{T}{\rho}}
-	    \]
+	      Les solutions de cette équation sont les fonctions de Bessel. Par ailleurs, c'est une équation du second ordre il existe donc deux solutions linéairement indépendantes. La solution est donc de la forme :
+	      \[
+		F_n(\eta)=d_nJ_n(\eta)+e_nY_n(\eta)
+	      \]
+	      avec les fonctions de Bessel d'ordre $n$ de première et deuxième espèce suivantes :
+	      \[
+		J_n(\eta)=\left(\dfrac{\eta}{2}\right)^n\sum_{m=0}^{\infty} \dfrac{(-\eta^2/4)^m}{m!\int_0^{\infty}e^{-t}t^{n+m}dt}
+	      \]
+	      \[
+		Y_n(\eta)=\dfrac{J_n(\eta)\cos(n\pi)-J_{-n}(\eta)}{\sin(n\pi)}
+	      \]
+	      Or les fonctions $Y_n(x)$ divergent au centre de la membrane $(\eta\rightarrow 0)$ donc $e_n=0$
+	      ainsi la solution analytique de l'équation (\ref{eq:polarmodel}) est donnée par :
+	      \[
+		w(\eta,\theta,\tau)=\cos(\omega \tau)\sum_n d_nJ_n(\omega\eta)\cos(n\theta)
+	      \]
+	      On sélectionne les fréquences en utilisant les conditions limites. Par exemple, dans le cas $n=0$, 
+	      \[
+		w(\eta,\theta,\tau)=\cos(\omega \tau) d_0J_0(\omega \eta)
+	      \]
+	      ainsi $\omega$ décrit les zéros de $J_0$ puisque la condition aux bords est $w(1,\theta,\tau)=0$. Si on note $\lambda_{m,0}$ la suite de ces zéros, on obtient les fréquences propres de vibration de la membrane :
+	      \[
+		\eta_{m,0}=\dfrac{\lambda_{m,0}}{2\pi a} \sqrt{\frac{T}{\rho}}
+	      \]
+	      En notant $\lambda_{m,n}$ la $m$-ième racine de $J_n$, on obtient de même 
+	      \[
+		\eta_{m,n}=\dfrac{\lambda_{m,n}}{2\pi a} \sqrt{\frac{T}{\rho}}
+	      \]
 
-	    Les valeurs numériques des racines des fonctions de Bessel $J_n$ sont fournies Table 1. Il en découle que les fréquences propres $\eta_{m,n}$ ne sont pas des multiples de la fréquence fondamentale. Par conséquent le son produit par la membrane n'est pas harmonique.
+	      Les valeurs numériques des racines des fonctions de Bessel $J_n$ sont fournies Table 1. Il en découle que les fréquences propres $\eta_{m,n}$ ne sont pas des multiples de la fréquence fondamentale. Par conséquent le son produit par la membrane n'est pas harmonique.
 
-	    \newpage 
+	      \newpage 
 
-	    \subsection*{2.5 : Code scilab du schéma explicite et analyse des résultats}
+	      \subsection*{2.5 : Code scilab du schéma explicite et analyse des résultats}
 
-	    Afin de résoudre numériquement le schéma explicite en coordonnées polaires, on définit $w_{ij}^n$ comme un tableau de taille $(N_\eta)\times(N_\theta+1)$ avec :
-	    \[
-	      \eta=id\eta ,\;i=1,..,N_\eta
-	    \]
-	    \[
-	      \theta=jd\theta ,\;j=1,..,N_\theta+1
-	    \]
-	    On pose des conditions périodiques en $\theta$ :
-	    \[
-	      w(\eta,\theta,\tau)=w(\eta,\theta+2\pi,\tau)
-	    \]
+	      Afin de résoudre numériquement le schéma explicite en coordonnées polaires, on définit $w_{ij}^n$ comme un tableau de taille $(N_\eta)\times(N_\theta+1)$ avec :
+	      \[
+		\eta=id\eta ,\;i=1,..,N_\eta
+	      \]
+	      \[
+		\theta=jd\theta ,\;j=1,..,N_\theta+1
+	      \]
+	      On pose des conditions périodiques en $\theta$ :
+	      \[
+		w(\eta,\theta,\tau)=w(\eta,\theta+2\pi,\tau)
+	      \]
 
 %--- Question 14 ---%
 
@@ -897,8 +913,8 @@ On cherche à résoudre le problème suivant, trouver $w(x,y,t)$ sur une durée 
 	      \]
 	      Créez une animation de la vibration de la membrane à différents instants.
 
-	    \newpage
+	      \newpage
 
-	    \end{document}
+	      \end{document}
 
 % Fin du document LaTeX
