@@ -884,215 +884,242 @@
 
 %--- Question 9 ---%
 
-			      \question En utilisant un développement de Taylor  et le  schéma explicite (\ref{eq:diffcartesiennes}) écrire les conditions initiales et les conditions limites de l'équation (\ref{eq:membranemodel}) obtenues pour $w_{i,j}^0,w_{i,j}^1$ sur la grille cartésienne.
+			      \question Grâce à un développement de Taylor à
+			      l'ordre 2, on
+			      peut écrire :
+			      \[
+				w_{ij}^1 = w_{ij}^0 + dt\frac{\partial w_{ij}^0}{\partial t} + \frac{dt^2}{2}\frac{\partial^2 w_{ij}^0}{\partial t^2} + o(t^2)
+			      \]
+
+			      La vitesse à l'instant initial est nulle, on peut donc supprimer le
+			      terme d'ordre 1. De plus le terme d'ordre 2 s'exprime également sous
+			      forme de dérivées spatiales :
+
+			      \[
+				w_{ij}^1 = w_{ij}^0 +
+				\frac{dt^2}{2}\frac{T}{\rho}\left(\frac{\partial^2 w_{ij}^0}{\partial x^2} +
+				\frac{\partial^2 w_{ij}^0}{\partial y^2} \right)
+			      \]
+
+			      Or d'après les formules de Taylor :
+			      \[
+				\frac{\partial^2
+				  w_{ij}^0}{\partial x^2} = \frac{1}{dx^2}(w_{i+1 j}^0 + w_{i-1 j}^0 -2w_{i j}^0)
+				\]
+
+				De même pour $\frac{\partial^2 w_{ij}^0}{\partial y^2}$, d'où finalement la relation suivante :
+				\[
+				  w_{ij}^1 = w_{ij}^0 + \frac{T}{\rho}\left(\frac{dt^2}{2dx^2}(w_{i+1 j}^0 + w_{i-1 j}^0 -2w_{i j}^0)+\frac{dt^2}{2dy^2}(w_{i j+1}^0 + w_{i j-1}^0 -2w_{i j}^0)\right) 
+				\]
+
 
 %--- Fin Question 9 ---%
 
 %--- Question 10 ---%
 
-			      \question On note maintenant $w_{ij}^{n}=w(id\eta,jd\theta,ndt)$ les valeurs aux noeuds de la grille polaire représentée Figure \ref{fig:polaire}. Ecrire le schéma explicite de l'équation (\ref{eq:polarmodel}).
+				\question On note maintenant $w_{ij}^{n}=w(id\eta,jd\theta,ndt)$ les valeurs aux noeuds de la grille polaire représentée Figure \ref{fig:polaire}. Ecrire le schéma explicite de l'équation (\ref{eq:polarmodel}).
 
 %--- Fin Question 10 ---%
 
-			      On montre qu'une condition limite en $\eta=0$ sur la grille polaire se détermine en utilisant le schéma explicite en coordonnées cartésiennes (\ref{eq:diffcartesiennes}), on obtient :
-			      \[
-				\dfrac{w_0^{n+1}-2 w_0^{n}+ w_{0}^{n-1}}{dt^2}=\dfrac{4}{d \eta^2}\left(\frac{1}{N_\theta} \sum_{j=1}^{N_\theta} w_{1,j}-w_{0}^{n}\right)
-			      \]
+				On montre qu'une condition limite en $\eta=0$ sur la grille polaire se détermine en utilisant le schéma explicite en coordonnées cartésiennes (\ref{eq:diffcartesiennes}), on obtient :
+				\[
+				  \dfrac{w_0^{n+1}-2 w_0^{n}+ w_{0}^{n-1}}{dt^2}=\dfrac{4}{d \eta^2}\left(\frac{1}{N_\theta} \sum_{j=1}^{N_\theta} w_{1,j}-w_{0}^{n}\right)
+				\]
 
-			      \subsection*{2.3 : Stabilité et précision du schéma}
+				\subsection*{2.3 : Stabilité et précision du schéma}
 
-			      \subsubsection{Etude de la stabilité}
-			      Commencons par une étude de la stabilité du schéma explicite (10), pour cela on remplace $w_{i,j}^{n}$ dans l'équation discrétisée, par une solution décomposée en modes de fourier: 
-			      \[
-				W_{p_{i,j}}^{n}=\phi^n e^{i\alpha_1(idx)}e^{i\alpha_2(jdy)}
-			      \]
+				\subsubsection{Etude de la stabilité}
+				Commencons par une étude de la stabilité du schéma explicite (10), pour cela on remplace $w_{i,j}^{n}$ dans l'équation discrétisée, par une solution décomposée en modes de fourier: 
+				\[
+				  W_{p_{i,j}}^{n}=\phi^n e^{i\alpha_1(idx)}e^{i\alpha_2(jdy)}
+				\]
 
     %--- Question 11 ---%
 
-			      \question Soit $J=\dfrac{\phi^{n+1}}{\phi^n}$ le coefficient d'amplification, montrer que $J$ vérifie l'équation du second degré suivante : 
-			      \[
-				J^2+\gamma J+1=0
-			      \]
-			      avec 
-			      \[
-				\gamma=-2+2c^2\dfrac{dt^2}{dx^2}(1-\cos(\alpha_1dx))+2c^2\dfrac{dt^2}{dy^2}(1-\cos(\alpha_2dy))
-			      \]
-			      En admettant que le schéma explicite (\ref{eq:membranemodel}) est stable sous la condition 
-			      \[
-				\vert J \vert \leq 1
-			      \]
-			      en déduire que cette condition de stabilité s'écrit aussi :
-			      \[
-				c^2\left(\dfrac{dt^2}{dx^2}+\dfrac{dt^2}{dy^2}\right)\leq 1
-			      \]
+				\question Soit $J=\dfrac{\phi^{n+1}}{\phi^n}$ le coefficient d'amplification, montrer que $J$ vérifie l'équation du second degré suivante : 
+				\[
+				  J^2+\gamma J+1=0
+				\]
+				avec 
+				\[
+				  \gamma=-2+2c^2\dfrac{dt^2}{dx^2}(1-\cos(\alpha_1dx))+2c^2\dfrac{dt^2}{dy^2}(1-\cos(\alpha_2dy))
+				\]
+				En admettant que le schéma explicite (\ref{eq:membranemodel}) est stable sous la condition 
+				\[
+				  \vert J \vert \leq 1
+				\]
+				en déduire que cette condition de stabilité s'écrit aussi :
+				\[
+				  c^2\left(\dfrac{dt^2}{dx^2}+\dfrac{dt^2}{dy^2}\right)\leq 1
+				\]
 
     %--- Fin Question 11 ---%
 
-			      Ainsi en posant $\displaystyle h=\dfrac{dxdy}{\sqrt{dx^2+dy^2}}$ on obtient la condition de courant : 
-			      \begin{equation}
-				\begin{array}{l}
-				  CFL=c\dfrac{dt}{h} \leq 1~[\textrm{Cartésien}] \\ \\
-				  \displaystyle CFL=\frac{d \tau}{d \eta d \theta}\leq 1~[\textrm{Polaire}]
-				\end{array}
-				\label{eq:CFL}
-			      \end{equation}
+				Ainsi en posant $\displaystyle h=\dfrac{dxdy}{\sqrt{dx^2+dy^2}}$ on obtient la condition de courant : 
+				\begin{equation}
+				  \begin{array}{l}
+				    CFL=c\dfrac{dt}{h} \leq 1~[\textrm{Cartésien}] \\ \\
+				    \displaystyle CFL=\frac{d \tau}{d \eta d \theta}\leq 1~[\textrm{Polaire}]
+				  \end{array}
+				  \label{eq:CFL}
+				\end{equation}
 
-			      \subsubsection{Etude de la consistance}
-			      On souhaite étudier la précision du schéma explicite (\ref{eq:diffcartesiennes}) en coordonnées cartésiennes.
+				\subsubsection{Etude de la consistance}
+				On souhaite étudier la précision du schéma explicite (\ref{eq:diffcartesiennes}) en coordonnées cartésiennes.
 
 	%--- Question 12 ---%
 
-			      \question En développant $w_{i,j}^{n+1},w_{i,j}^{n},w_{i,j}^{n-1}$ par un développement de Taylor montrer que le schéma est d'ordre 2 en temps \textit{i.e} l'erreur de troncature est en $o(dt^2)$.\\
-			      En suivant le même principe avec les termes en espace $w_{i+1,j}^{n},w_{i-1,j}^{n},w_{i,j-1}^{n},w_{i,j}^{n},w_{i,j+1}^{n}$ montrer que l'erreur de troncature est en $o (dx^2,dy^2)$.\\
-			      Ecrire alors l'erreur de troncature $E_t$ du schéma et en déduire que le schéma est d'ordre deux en temps et en espace. Ainsi le schéma explicite (\ref{eq:diffcartesiennes}) est consistant 
-			      \[
-				\lim_{(dt,dx,dy)\longrightarrow 0} E_t=0
-			      \]
+				\question En développant $w_{i,j}^{n+1},w_{i,j}^{n},w_{i,j}^{n-1}$ par un développement de Taylor montrer que le schéma est d'ordre 2 en temps \textit{i.e} l'erreur de troncature est en $o(dt^2)$.\\
+				En suivant le même principe avec les termes en espace $w_{i+1,j}^{n},w_{i-1,j}^{n},w_{i,j-1}^{n},w_{i,j}^{n},w_{i,j+1}^{n}$ montrer que l'erreur de troncature est en $o (dx^2,dy^2)$.\\
+				Ecrire alors l'erreur de troncature $E_t$ du schéma et en déduire que le schéma est d'ordre deux en temps et en espace. Ainsi le schéma explicite (\ref{eq:diffcartesiennes}) est consistant 
+				\[
+				  \lim_{(dt,dx,dy)\longrightarrow 0} E_t=0
+				\]
 
 	    %--- Fin Question 12 ---%
 
-			      \subsection*{2.4 : Solutions analytiques }
-			      On cherche une solution de notre équation d'onde polaire sous la forme :
-			      \[
-				w(\eta,\theta,\tau)=F(\eta,\theta)\cos(\omega \tau)
-			      \]
-			      avec $\omega$ la fréquence de vibration de l'onde et $F$ l'amplitude.
+				\subsection*{2.4 : Solutions analytiques }
+				On cherche une solution de notre équation d'onde polaire sous la forme :
+				\[
+				  w(\eta,\theta,\tau)=F(\eta,\theta)\cos(\omega \tau)
+				\]
+				avec $\omega$ la fréquence de vibration de l'onde et $F$ l'amplitude.
 
     %--- Question 13 ---%
 
-			      \question Ecrire l'équation différentielle vérifiée par l'amplitude $F$.\\
+				\question Ecrire l'équation différentielle vérifiée par l'amplitude $F$.\\
 
-			      La condition limite $F(1,0)=0$ nous permet de décomposer l'amplitude $F(\eta,\theta)$ sous la forme :
-			      \[
-				F(\eta,\theta)=\sum_n F_n(\eta)\cos(n\theta)
-			      \]
-			      Montrer que chaque $F_n$ vérifie l'équation de Bessel suivante, avec  $\alpha=\omega\eta$ :
-			      \[
-				\frac{d^2 F_n}{d\alpha^2}+\frac{1}{\alpha}\frac{dF_n}{d\alpha}+\left(1-\frac{n^2}{\alpha^2}\right)F_n=0
-			      \]
+				La condition limite $F(1,0)=0$ nous permet de décomposer l'amplitude $F(\eta,\theta)$ sous la forme :
+				\[
+				  F(\eta,\theta)=\sum_n F_n(\eta)\cos(n\theta)
+				\]
+				Montrer que chaque $F_n$ vérifie l'équation de Bessel suivante, avec  $\alpha=\omega\eta$ :
+				\[
+				  \frac{d^2 F_n}{d\alpha^2}+\frac{1}{\alpha}\frac{dF_n}{d\alpha}+\left(1-\frac{n^2}{\alpha^2}\right)F_n=0
+				\]
 
     %--- Fin Question 13 ---%
 
-			      \begin{table}
-				\begin{center}
-				  \begin{tabular}{|c|c|c|c|c|c|}
-				    \hline
-				    $\lambda_{n,m}$&$m=1$  &$m=2$ & $m=3$ &$ m=4$&$m=5$\\
-				    \hline
-				    $n=0$&2.40483&$5.52008$&$8.65373$&$11.79153$&$14.93092$\\
-				    \hline
-				    $n=1$&$3.83171$&$7.01559$&$10.17347$&$13.32369$&$16.47063$\\
-				    \hline
-				    $n=2$&$5.13562$&$8.41724$&$11.61984$&$14.79595$&$17.95982$\\
-				    \hline
-				    $n=3$&$6.38016$&$9.76102$&$13.01520$&$16.22347$&$19.40942$\\
-				    \hline
-				    $n=4$&$7.58834$&$11.06471$&$14.37254$&$17.61597$&$20.82693$\\
-				    \hline
-				  \end{tabular}
-				  \caption{Valeurs des cinq premiers zéros des fonctions de Bessel $J_n$.}
-				\end{center}
-			      \end{table}
+				\begin{table}
+				  \begin{center}
+				    \begin{tabular}{|c|c|c|c|c|c|}
+				      \hline
+				      $\lambda_{n,m}$&$m=1$  &$m=2$ & $m=3$ &$ m=4$&$m=5$\\
+				      \hline
+				      $n=0$&2.40483&$5.52008$&$8.65373$&$11.79153$&$14.93092$\\
+				      \hline
+				      $n=1$&$3.83171$&$7.01559$&$10.17347$&$13.32369$&$16.47063$\\
+				      \hline
+				      $n=2$&$5.13562$&$8.41724$&$11.61984$&$14.79595$&$17.95982$\\
+				      \hline
+				      $n=3$&$6.38016$&$9.76102$&$13.01520$&$16.22347$&$19.40942$\\
+				      \hline
+				      $n=4$&$7.58834$&$11.06471$&$14.37254$&$17.61597$&$20.82693$\\
+				      \hline
+				    \end{tabular}
+				    \caption{Valeurs des cinq premiers zéros des fonctions de Bessel $J_n$.}
+				  \end{center}
+				\end{table}
 
-			      Les solutions de cette équation sont les fonctions de Bessel. Par ailleurs, c'est une équation du second ordre il existe donc deux solutions linéairement indépendantes. La solution est donc de la forme :
-			      \[
-				F_n(\eta)=d_nJ_n(\eta)+e_nY_n(\eta)
-			      \]
-			      avec les fonctions de Bessel d'ordre $n$ de première et deuxième espèce suivantes :
-			      \[
-				J_n(\eta)=\left(\dfrac{\eta}{2}\right)^n\sum_{m=0}^{\infty} \dfrac{(-\eta^2/4)^m}{m!\int_0^{\infty}e^{-t}t^{n+m}dt}
-			      \]
-			      \[
-				Y_n(\eta)=\dfrac{J_n(\eta)\cos(n\pi)-J_{-n}(\eta)}{\sin(n\pi)}
-			      \]
-			      Or les fonctions $Y_n(x)$ divergent au centre de la membrane $(\eta\rightarrow 0)$ donc $e_n=0$
-			      ainsi la solution analytique de l'équation (\ref{eq:polarmodel}) est donnée par :
-			      \[
-				w(\eta,\theta,\tau)=\cos(\omega \tau)\sum_n d_nJ_n(\omega\eta)\cos(n\theta)
-			      \]
-			      On sélectionne les fréquences en utilisant les conditions limites. Par exemple, dans le cas $n=0$, 
-			      \[
-				w(\eta,\theta,\tau)=\cos(\omega \tau) d_0J_0(\omega \eta)
-			      \]
-			      ainsi $\omega$ décrit les zéros de $J_0$ puisque la condition aux bords est $w(1,\theta,\tau)=0$. Si on note $\lambda_{m,0}$ la suite de ces zéros, on obtient les fréquences propres de vibration de la membrane :
-			      \[
-				\eta_{m,0}=\dfrac{\lambda_{m,0}}{2\pi a} \sqrt{\frac{T}{\rho}}
-			      \]
-			      En notant $\lambda_{m,n}$ la $m$-ième racine de $J_n$, on obtient de même 
-			      \[
-				\eta_{m,n}=\dfrac{\lambda_{m,n}}{2\pi a} \sqrt{\frac{T}{\rho}}
-			      \]
+				Les solutions de cette équation sont les fonctions de Bessel. Par ailleurs, c'est une équation du second ordre il existe donc deux solutions linéairement indépendantes. La solution est donc de la forme :
+				\[
+				  F_n(\eta)=d_nJ_n(\eta)+e_nY_n(\eta)
+				\]
+				avec les fonctions de Bessel d'ordre $n$ de première et deuxième espèce suivantes :
+				\[
+				  J_n(\eta)=\left(\dfrac{\eta}{2}\right)^n\sum_{m=0}^{\infty} \dfrac{(-\eta^2/4)^m}{m!\int_0^{\infty}e^{-t}t^{n+m}dt}
+				\]
+				\[
+				  Y_n(\eta)=\dfrac{J_n(\eta)\cos(n\pi)-J_{-n}(\eta)}{\sin(n\pi)}
+				\]
+				Or les fonctions $Y_n(x)$ divergent au centre de la membrane $(\eta\rightarrow 0)$ donc $e_n=0$
+				ainsi la solution analytique de l'équation (\ref{eq:polarmodel}) est donnée par :
+				\[
+				  w(\eta,\theta,\tau)=\cos(\omega \tau)\sum_n d_nJ_n(\omega\eta)\cos(n\theta)
+				\]
+				On sélectionne les fréquences en utilisant les conditions limites. Par exemple, dans le cas $n=0$, 
+				\[
+				  w(\eta,\theta,\tau)=\cos(\omega \tau) d_0J_0(\omega \eta)
+				\]
+				ainsi $\omega$ décrit les zéros de $J_0$ puisque la condition aux bords est $w(1,\theta,\tau)=0$. Si on note $\lambda_{m,0}$ la suite de ces zéros, on obtient les fréquences propres de vibration de la membrane :
+				\[
+				  \eta_{m,0}=\dfrac{\lambda_{m,0}}{2\pi a} \sqrt{\frac{T}{\rho}}
+				\]
+				En notant $\lambda_{m,n}$ la $m$-ième racine de $J_n$, on obtient de même 
+				\[
+				  \eta_{m,n}=\dfrac{\lambda_{m,n}}{2\pi a} \sqrt{\frac{T}{\rho}}
+				\]
 
-			      Les valeurs numériques des racines des fonctions de Bessel $J_n$ sont fournies Table 1. Il en découle que les fréquences propres $\eta_{m,n}$ ne sont pas des multiples de la fréquence fondamentale. Par conséquent le son produit par la membrane n'est pas harmonique.
+				Les valeurs numériques des racines des fonctions de Bessel $J_n$ sont fournies Table 1. Il en découle que les fréquences propres $\eta_{m,n}$ ne sont pas des multiples de la fréquence fondamentale. Par conséquent le son produit par la membrane n'est pas harmonique.
 
-			      \newpage 
+				\newpage 
 
-			      \subsection*{2.5 : Code scilab du schéma explicite et analyse des résultats}
+				\subsection*{2.5 : Code scilab du schéma explicite et analyse des résultats}
 
-			      Afin de résoudre numériquement le schéma explicite en coordonnées polaires, on définit $w_{ij}^n$ comme un tableau de taille $(N_\eta)\times(N_\theta+1)$ avec :
-			      \[
-				\eta=id\eta ,\;i=1,..,N_\eta
-			      \]
-			      \[
-				\theta=jd\theta ,\;j=1,..,N_\theta+1
-			      \]
-			      On pose des conditions périodiques en $\theta$ :
-			      \[
-				w(\eta,\theta,\tau)=w(\eta,\theta+2\pi,\tau)
-			      \]
+				Afin de résoudre numériquement le schéma explicite en coordonnées polaires, on définit $w_{ij}^n$ comme un tableau de taille $(N_\eta)\times(N_\theta+1)$ avec :
+				\[
+				  \eta=id\eta ,\;i=1,..,N_\eta
+				\]
+				\[
+				  \theta=jd\theta ,\;j=1,..,N_\theta+1
+				\]
+				On pose des conditions périodiques en $\theta$ :
+				\[
+				  w(\eta,\theta,\tau)=w(\eta,\theta+2\pi,\tau)
+				\]
 
     %--- Question 14 ---%
 
-			      \question On prend la condition initiale suivante:
-			      \begin{equation}
-				w(\eta,\theta,0)=J_0(\lambda_{0,3}\eta)
-				\label{eq:condinit}
-			      \end{equation}
-			      avec $\lambda_{0,3}=8.65373$, la valeur approchée de la troisième valeur propre de $J_0$ correspondant à la fréquence du mode (0,3). De cette façon on a $d_0=1$.\\
+				\question On prend la condition initiale suivante:
+				\begin{equation}
+				  w(\eta,\theta,0)=J_0(\lambda_{0,3}\eta)
+				  \label{eq:condinit}
+				\end{equation}
+				avec $\lambda_{0,3}=8.65373$, la valeur approchée de la troisième valeur propre de $J_0$ correspondant à la fréquence du mode (0,3). De cette façon on a $d_0=1$.\\
 
-			      Ecrire un programme scilab qui résout numériquement le schéma explicite en coordonnées polaires de l'équation (\ref{eq:polarmodel}) avec les données suivantes : 
-			      \[
-				\begin{array}{ll}
-				  \bullet & N_\theta=80 \\ 
-				  \bullet & N_\eta=40 \\ 
-				  \bullet & CFL=0.5 \\ 
-				  \bullet & c=1
-				\end{array}
-			      \]
-			      Utilisez la fonction $besselj$ de Scilab pour implémenter la condition initiale (voir Figure \ref{fig:bessel}).\\
-			      Créez une animation représentant les vibrations de la membrane à différents instants $w^n$.
+				Ecrire un programme scilab qui résout numériquement le schéma explicite en coordonnées polaires de l'équation (\ref{eq:polarmodel}) avec les données suivantes : 
+				\[
+				  \begin{array}{ll}
+				    \bullet & N_\theta=80 \\ 
+				    \bullet & N_\eta=40 \\ 
+				    \bullet & CFL=0.5 \\ 
+				    \bullet & c=1
+				  \end{array}
+				\]
+				Utilisez la fonction $besselj$ de Scilab pour implémenter la condition initiale (voir Figure \ref{fig:bessel}).\\
+				Créez une animation représentant les vibrations de la membrane à différents instants $w^n$.
 
 	%--- Fin Question 14 ---%
 
 	%--- Question 15 ---%
 
-			      \question La solution analytique correspondant à la condition initiale (\ref{eq:condinit}) est :
-			      \[
-				w_{ex}(\eta,\theta,\tau)=\cos(\lambda_{0,3} \tau)J_0(\lambda_{0,3}\eta)
-			      \]
-			      Comparer visuellement les deux solutions (analytique $w_{ex}$ et numérique $w_{num}$) en vérifiant qu'elles possèdent bien le même comportement.
-			      Tracez l'erreur relative en $\eta=0$ en fonction du temps pour   différentes valeurs de la CFL. 
-			      Qu'observez-vous ?
+				\question La solution analytique correspondant à la condition initiale (\ref{eq:condinit}) est :
+				\[
+				  w_{ex}(\eta,\theta,\tau)=\cos(\lambda_{0,3} \tau)J_0(\lambda_{0,3}\eta)
+				\]
+				Comparer visuellement les deux solutions (analytique $w_{ex}$ et numérique $w_{num}$) en vérifiant qu'elles possèdent bien le même comportement.
+				Tracez l'erreur relative en $\eta=0$ en fonction du temps pour   différentes valeurs de la CFL. 
+				Qu'observez-vous ?
 
     %--- Fin Question 15 ---%
 
     %--- Question 16 ---%
 
-			      \question On fixe la CFL à 0.8. Tracez l'erreur relative globale $\|w_{ex}-w_{num}\|_{\infty}$ pour les grilles de taille ($N_\theta=80$, $N_\eta=40$), ($N_\theta=40$,$N_\eta=20$) et ($N_\theta=160$,$N_\eta=80$).\\
-			      Comparez l'erreur relative obtenue pour les trois différentes grilles et en déduire que le schéma est d'ordre deux en espace.
+				\question On fixe la CFL à 0.8. Tracez l'erreur relative globale $\|w_{ex}-w_{num}\|_{\infty}$ pour les grilles de taille ($N_\theta=80$, $N_\eta=40$), ($N_\theta=40$,$N_\eta=20$) et ($N_\theta=160$,$N_\eta=80$).\\
+				Comparez l'erreur relative obtenue pour les trois différentes grilles et en déduire que le schéma est d'ordre deux en espace.
 
 	%--- Fin Question 16 ---%
 
 	%--- Question 17 ---%
 
-			      \question On souhaite à présent représenter le mode (1,1) pour cela on introduit la condition initiale suivante:
-			      \[
-				w(\eta,\theta,0)=\dfrac{J_1(\lambda_{1,1}\eta)\cos(\theta)}{2}
-			      \]
-			      Créez une animation de la vibration de la membrane à différents instants.
+				\question On souhaite à présent représenter le mode (1,1) pour cela on introduit la condition initiale suivante:
+				\[
+				  w(\eta,\theta,0)=\dfrac{J_1(\lambda_{1,1}\eta)\cos(\theta)}{2}
+				\]
+				Créez une animation de la vibration de la membrane à différents instants.
 
-			      \newpage
+				\newpage
 
-			      \end{document}
+				\end{document}
 
 	% Fin du document LaTeX
