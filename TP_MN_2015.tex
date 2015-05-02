@@ -859,28 +859,7 @@
 	%--- Fin Question 8 ---%
 
 			  \subsection*{2.2 : Discrétisation polaire de la surface 2D par un schéma explicite }
-			  Le but de cette partie est de discrétiser l'équation des ondes dans la base polaire (\ref{eq:polarmodel}) en utilisant un schéma explicite. Pour cela considérons dans un premier temps une discrétisation de $\Omega $ suivant une grille cartésienne $[0,N_x]\times [0,N_y]$ de pas uniforme $dx$, $dy$, formée par des points de coordonnées $(x_i,y_j)$ tel que :
-			  \begin{equation*}{}
-			    \left\{
-			      \begin{array}{rl}
-				x_i &=i dx,\quad 0\leq i \leq N_x \\
-				y_j &=j dy,\quad  0\leq j \leq N_y \\
-				dx & =\frac{1}{N_x+1}\\
-				dy &=\frac{1}{N_y+1}\\
-			      \end{array}
-			      \right.
-			    \end{equation*}
-			    On note $dt$ le pas de temps et on approche la solution $w(x_i,y_j,ndt)$ par $w_{ij}^{n}$. Le laplacien est discrétisé  par un schéma centré d'ordre deux  et on utilise un schéma explicite d'ordre deux en temps. L'ordre de ces schémas peut être vérifié en utilisant un développement de Taylor. Le schéma explicite obtenue pour l'équation des ondes (\ref{eq:membranemodel}) est :
-
-			    \begin{equation}
-			      \left\{
-				\begin{array}{rl}
-				  \dfrac{w_{ij}^{n+1}-2w_{ij}^{n}+w_{ij}^{n-1}}{dt^{2}}=c^2\dfrac{w_{i+1,j}^{n}-2w_{i,j}^{n}+w_{i-1,j}^{n}}
-				  {dx^{2}}+c^2\dfrac{w_{i,j+1}^{n}-2w_{i,j}^{n}+w_{i,j-1}^{n}}{dy^{2}}
-				\end{array}
-				\right.
-				\label{eq:diffcartesiennes}
-			      \end{equation}
+			  Le but de cette partie est de discrétiser l'équation des ondes dans la base polaire en utilisant un schéma explicite.
 
 %--- Question 9 ---%
 
